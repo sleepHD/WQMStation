@@ -52,7 +52,7 @@ namespace WQMStation.HJ212.Message
                     dic.Add(parts[0], parts[1]);
                 }     
             }
-            QN = DateTime.ParseExact(dic["QN"], "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None);
+            QN = DateTime.ParseExact(dic["QN"], "yyyyMMddHHmmssfff", CultureInfo.InvariantCulture, DateTimeStyles.None);
             ST = dic["ST"];
             CN = dic["CN"];
             Password = dic["PW"];

@@ -8,7 +8,7 @@
     using Utility;
     using WQMStation.IO;
 
-    internal class HJ212Transport
+    internal class HJ212Transport : IDisposable
     {
        
         public bool CheckFrame { get; set; }
@@ -107,6 +107,28 @@
 
             byte[] frame = BuildMessageFrame(message);
             _streamResource.Write(frame, 0, frame.Length);
+        }
+
+        /// <summary>
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        ///     Releases unmanaged and - optionally - managed resources
+        /// </summary>
+        /// <param name="disposing">
+        ///     <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
+        ///     unmanaged resources.
+        /// </param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+                DisposableUtility.Dispose(ref _streamResource);
         }
     }
 }

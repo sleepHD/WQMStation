@@ -45,11 +45,14 @@
   <ItemGroup>
     <Compile Include="Data\HourData.cs" />
     <Compile Include="Data\VarItem.cs" />
-    <Compile Include="HJ211Client.cs" />
+    <Compile Include="Device\HJ212Device.cs" />
+    <Compile Include="Device\HJ212Center.cs" />
+    <Compile Include="Device\HJ212Field.cs" />
     <Compile Include="HJ212.cs" />
     <Compile Include="IO\HJ212Transport.cs" />
     <Compile Include="IO\StreamResourceUtility.cs" />
     <Compile Include="Message\HDataReport.cs" />
+    <Compile Include="Message\HDataReportAck.cs" />
     <Compile Include="Message\HJ212Message.cs" />
     <Compile Include="Message\HJ212MessageFactory.cs" />
     <Compile Include="Message\RDataReport.cs" />

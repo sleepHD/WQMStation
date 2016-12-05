@@ -1,13 +1,12 @@
-﻿
-
-
-namespace WQMStation.HJ212.Message
+﻿namespace WQMStation.HJ212.Message
 {
     using System;
     using System.Globalization;
     using System.IO;
     using System.Text;
     using Data;
+    using System.Collections.Generic;
+    using System.Linq;
 
     internal class HDataReport : HJ212Message
     {
@@ -30,7 +29,30 @@ namespace WQMStation.HJ212.Message
 
         protected override void InitializeUnique(string dataString)
         {
-            throw new NotImplementedException();
+            var itemString = dataString.Substring("CP=&&".Length, dataString.Length - "CP=&&&&".Length);
+            var items = itemString.Split(';');
+            DateTime dt = DateTime.MinValue;
+            var pts = items[0].Split('=');
+            if (pts.Length == 2)
+            {
+                dt = DateTime.ParseExact(pts[1], "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None);
+            }
+            var vItems = new List<VarItem>();
+            foreach ( var item in items.Skip(1).ToArray())
+            {
+                var vfParts = item.Split(',');
+                if (vfParts.Length == 2)
+                {
+                    var v = new VarItem();
+                    var vParts = vfParts[0].Split('=');
+                    v.Code = vParts[0].Substring(0, vParts[0].IndexOf('-'));
+                    v.Value = double.Parse(vParts[1]);
+                    var fParts = vfParts[1].Split('=');
+                    v.Flag = fParts[1];
+                    vItems.Add(v);
+                }
+            }
+            _hourData = new HourData(dt, vItems.ToArray());
         }
 
         public override void ValidateResponse(HJ212Message response)
