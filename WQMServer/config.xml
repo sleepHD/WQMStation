@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <Channels>
+    <Channel driver="OPC" host="">
+      <Device addr="KingView.View">
+        <PV name = "PH值" valueType = "14"/>
+        <PV name = "水温" valueType = "14"/>
+        <PV name = "溶解氧" valueType = "14"/>
+        <PV name = "电导率" valueType = "14"/>
+        <PV name = "浊度" valueType = "14"/>
+      </Device>
+    </Channel>
+  </Channels>
+  <Apps>
+    <App dll="HJ212_XHHB" description="">
+      <Station type="Client" Name="" MN="" ST="" PassWord="">
+        
+      </Station>
+    </App>
+  </Apps>
+</configuration>
