@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HJ212", "HJ212\HJ212.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IO", "IO\IO.csproj", "{B3B062C3-1D56-4521-BE39-E9A037BB67E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples", "Samples\Samples.csproj", "{74DABAFE-8096-4A96-8DCB-8D81D025450A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HJ212FieldTest", "HJ212FieldTest\HJ212FieldTest.csproj", "{74DABAFE-8096-4A96-8DCB-8D81D025450A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

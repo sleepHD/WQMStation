@@ -15,7 +15,7 @@
 
         private const string _header = "##";
         private const string _tailer = "\r\n";
-        private string _len = "0000";
+        private string _lenFormat = "0000";
 
         private readonly object _syncLock = new object();
         private IStreamResource _streamResource;
@@ -71,8 +71,8 @@
         {
             // read message frame, removing header,len
             var stringframe = StreamResourceUtility.ReadLine(_streamResource);
-            var messageFrame = stringframe.Substring(_header.Length + _len.Length,
-                                              stringframe.Length - _header.Length - _len.Length);
+            var messageFrame = stringframe.Substring(_header.Length + _lenFormat.Length,
+                                              stringframe.Length - _header.Length - _lenFormat.Length);
             var frame = Encoding.ASCII.GetBytes(messageFrame);
             var response = HJ212MessageFactory.CreateHJ212Message<T>(frame);
             // compare checksum
@@ -89,11 +89,12 @@
         {
             var messageFrame = message.MessageFrame;
             var crc = BytesUtility.GetAsciiBytes(BytesUtility.CalculateCrc(messageFrame));
-            var messageBody = new MemoryStream(_header.Length + _len.Length +
+            var messageBody = new MemoryStream(_header.Length + _lenFormat.Length +
                 messageFrame.Length + crc.Length + _tailer.Length);
 
             messageBody.Write(Encoding.ASCII.GetBytes(_header), 0, _header.Length);
-            messageBody.Write(Encoding.ASCII.GetBytes(_len), 0, _header.Length);
+            var len = messageFrame.Length.ToString(_lenFormat);
+            messageBody.Write(Encoding.ASCII.GetBytes(len), 0,  len.Length);
             messageBody.Write(messageFrame, 0, messageFrame.Length);
             messageBody.Write(crc, 0, crc.Length);
             messageBody.Write(Encoding.ASCII.GetBytes(_tailer), 0, _tailer.Length);

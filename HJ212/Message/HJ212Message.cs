@@ -52,16 +52,19 @@ namespace WQMStation.HJ212.Message
                     dic.Add(parts[0], parts[1]);
                 }     
             }
-            QN = DateTime.ParseExact(dic["QN"], "yyyyMMddHHmmssfff", CultureInfo.InvariantCulture, DateTimeStyles.None);
+            if (dic.ContainsKey("PN"))
+                QN = DateTime.ParseExact(dic["QN"], "yyyyMMddHHmmssfff", CultureInfo.InvariantCulture, DateTimeStyles.None);
             ST = dic["ST"];
             CN = dic["CN"];
-            Password = dic["PW"];
-            MN = dic["MN"];
-            if (dic["Flag"] != null)
+            if (dic.ContainsKey("PW"))
+                Password = dic["PW"];
+            if (dic.ContainsKey("MN"))
+                MN = dic["MN"];
+            if (dic.ContainsKey("Flag"))
                 Flag = int.Parse(dic["Flag"]);
-            if (dic["PNum"] != null)
+            if (dic.ContainsKey("PNum"))
                 PNum = int.Parse(dic["PNum"]);
-            if (dic["PNo"] != null)
+            if (dic.ContainsKey("PNo"))
                 PNo = int.Parse(dic["PNo"]);
 
             InitializeUnique(dataString);

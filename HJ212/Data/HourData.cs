@@ -22,13 +22,14 @@ namespace WQMStation.HJ212.Data
             get
             {
                 var dataString = new StringBuilder();
-                dataString.Append("DataTime=" + _datatime.ToString("yyyyMMddHHmmss"));
+                dataString.Append("DataTime=" + _datatime.ToString("yyyyMMddHHmmss") + ";");
                 foreach (var v in _vars)
                 {
                     dataString.Append(v.Code + "-Avg=" + v.Value.ToString(v.Format)
-                                      + "," + v.Code + "-Flag=" + v.Flag);
+                                      + "," + v.Code + "-Flag=" + v.Flag + ";");
                 }
-                return dataString.ToString();
+                //remove the last ";"
+                return dataString.ToString().Substring(0,dataString.Length - 1);
             }
         }
 

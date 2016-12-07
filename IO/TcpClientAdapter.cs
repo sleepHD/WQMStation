@@ -8,7 +8,7 @@ namespace WQMStation.IO
     /// <summary>
     ///     Concrete Implementor - http://en.wikipedia.org/wiki/Bridge_Pattern
     /// </summary>
-    internal class TcpClientAdapter : IStreamResource
+    public class TcpClientAdapter : IStreamResource
     {
         private TcpClient _tcpClient;
 

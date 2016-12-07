@@ -8,9 +8,9 @@
     {
         internal HJ212Transport _transport;
 
-        internal HJ212Device(IStreamResource streamResource)
+        internal HJ212Device(HJ212Transport transport)
         {
-            _transport = new IO.HJ212Transport(streamResource);
+            _transport = transport;
         }
         /// <summary>
         ///     Releases unmanaged and - optionally - managed resources

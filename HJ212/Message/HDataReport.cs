@@ -108,8 +108,11 @@
                     messageString.Append(Flag.Value.ToString());
                 }
                 messageString.Append("CP=&&");
+                messageString.Append(_hourData.DataString);
+                messageString.Append("&&");
                 return Encoding.ASCII.GetBytes(messageString.ToString());
             }
         }
     }
 }
+;
