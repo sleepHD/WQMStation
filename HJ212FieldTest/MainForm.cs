@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using WQMStation.HJ212.Data;
 using WQMStation.HJ212.Device;
 
-namespace Samples
+namespace HJ212FieldTest
 {
     public partial class MainForm : Form
     {
@@ -61,7 +61,14 @@ namespace Samples
             varList.Add(v5);
 
             var data = new HourData(DateTime.Now, varList.ToArray());
-            _hj212Field.ReportHourData(data);
+            try
+            {
+                _hj212Field.ReportHourData(data);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
     }
 }

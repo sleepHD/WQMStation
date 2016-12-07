@@ -25,7 +25,8 @@ namespace WQMStation.HJ212.Message
 
         internal HJ212Message(DateTime qn, string st, string cn, string passwd, string mn)
         {
-            QN = qn;
+            //使时间精度到毫秒，与从字符串解析的时间精度一致，否则时间不相等
+            QN = qn.AddTicks(-qn.Ticks % TimeSpan.TicksPerMillisecond);
             ST = st;
             CN = cn;
             Password = passwd;

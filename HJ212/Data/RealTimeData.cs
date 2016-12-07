@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
 namespace WQMStation.HJ212.Data
 {
-    public class HourData : HJ212Data
+    public class RealTimeData : HJ212Data
     {
-        public HourData(DateTime datatime, VarItem[] vars)
+        public RealTimeData(DateTime datatime, VarItem[] vars)
             :base(datatime, vars)
         {
+
         }
 
         public override string DataString
@@ -21,13 +21,12 @@ namespace WQMStation.HJ212.Data
                 dataString.Append("DataTime=" + _datatime.ToString("yyyyMMddHHmmss") + ";");
                 foreach (var v in _vars)
                 {
-                    dataString.Append(v.Code + "-Avg=" + v.Value.ToString(v.Format)
+                    dataString.Append(v.Code + "-Rtd=" + v.Value.ToString(v.Format)
                                       + "," + v.Code + "-Flag=" + v.Flag + ";");
                 }
                 //remove the last ";"
-                return dataString.ToString().Substring(0,dataString.Length - 1);
+                return dataString.ToString().Substring(0, dataString.Length - 1);
             }
         }
-
     }
 }

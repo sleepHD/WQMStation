@@ -1,9 +1,11 @@
 ﻿namespace WQMStation.HJ212.IO
 {
+    using log4net;
     using Message;
     using System;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using Utility;
     using WQMStation.IO;
@@ -13,9 +15,11 @@
        
         public bool CheckFrame { get; set; }
 
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(HJ212Transport));
         private const string _header = "##";
         private const string _tailer = "\r\n";
         private string _lenFormat = "0000";
+        private int _crcLen = 4;
 
         private readonly object _syncLock = new object();
         private IStreamResource _streamResource;
@@ -24,17 +28,28 @@
         public HJ212Transport(IStreamResource streamResource)
         {
             _streamResource = streamResource;
+            _streamResource.ReadTimeout = 20000;
+            _streamResource.WriteTimeout = 20000;
         }
 
         public  T UnicastMessage<T>(HJ212Message message) where T : HJ212Message, new()
         {
             HJ212Message response = null;
-            lock (_syncLock)
+            try
             {
-                Write(message);
-                response = ReadResponse<T>();
+                lock (_syncLock)
+                {
+                    Write(message);
+                    response = ReadResponse<T>();
+                }
+                ValidateResponse(message, response);
             }
-            ValidateResponse(message, response);
+            catch (Exception e)
+            {
+                _logger.ErrorFormat("{0}, {1}", e.GetType().Name, e);
+                throw;
+            }
+
             return (T)response;
         }
 
@@ -42,15 +57,16 @@
         internal  void ValidateResponse(HJ212Message request, HJ212Message response)
         {
             // always check the function code and slave address, regardless of transport protocol
-            if (request.QN != request.QN)
+            if (request.QN!= response.QN)
                 throw new IOException(String.Format(CultureInfo.InvariantCulture,
-                    "Received response with unexpected QN. Expected {0}, received {1}.", request.QN,
+                    "Received response with unexpected QN. Expected {0:yyyyMMddHHmmssfff}, received {1::yyyyMMddHHmmssfff}.",
+                    request.QN,
                     response.QN));
 
-            if (request.MN != response.MN)
-                throw new IOException(String.Format(CultureInfo.InvariantCulture,
-                    "Response MN does not match request. Expected {0}, received {1}.", response.MN,
-                    request.MN));
+            //if (request.MN != response.MN)
+            //    throw new IOException(String.Format(CultureInfo.InvariantCulture,
+            //        "Response MN does not match request. Expected {0}, received {1}.", response.MN,
+            //        request.MN));
 
             // message specific validation
             if (request != null)
@@ -69,12 +85,14 @@
 
         internal T ReadResponse<T>() where T : HJ212Message, new()
         {
-            // read message frame, removing header,len
+            // read message frame, removing header,len,tailer
             var stringframe = StreamResourceUtility.ReadLine(_streamResource);
+            _logger.InfoFormat("RX: {0}", stringframe);
             var messageFrame = stringframe.Substring(_header.Length + _lenFormat.Length,
-                                              stringframe.Length - _header.Length - _lenFormat.Length);
+                                              stringframe.Length - _header.Length - _lenFormat.Length - _tailer.Length);
+
             var frame = Encoding.ASCII.GetBytes(messageFrame);
-            var response = HJ212MessageFactory.CreateHJ212Message<T>(frame);
+            var response = HJ212MessageFactory.CreateHJ212Message<T>(frame.Take(frame.Length - _crcLen).ToArray());
             // compare checksum
             if (CheckFrame && !ChecksumsMatch(response, frame))
             {
@@ -107,6 +125,7 @@
             _streamResource.DiscardInBuffer();
 
             byte[] frame = BuildMessageFrame(message);
+            _logger.InfoFormat("TX: {0}", Encoding.ASCII.GetString(frame));
             _streamResource.Write(frame, 0, frame.Length);
         }
 

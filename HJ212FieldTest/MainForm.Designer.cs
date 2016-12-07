@@ -1,4 +1,4 @@
-﻿namespace Samples
+﻿namespace HJ212FieldTest
 {
     partial class MainForm
     {

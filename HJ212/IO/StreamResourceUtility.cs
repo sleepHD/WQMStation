@@ -19,7 +19,7 @@
                 result.Append(Encoding.ASCII.GetChars(singleByteBuffer).First());
             } while (!result.ToString().EndsWith("\r\n"));
 
-            return result.ToString().Substring(0, result.Length - "\r\n".Length);
+            return result.ToString();
         }
     }
 }

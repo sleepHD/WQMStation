@@ -21,7 +21,7 @@
         }
 
         public HDataReport(DateTime qn, string st, string passwd, string mn, HourData hourData)
-            :base(qn, st, passwd, HJ212.HourData, mn)
+            :base(qn, st, HJ212.HourData, passwd, mn)
         {
             ResponseCN = HJ212.DataAck;
             _hourData = hourData;
@@ -73,13 +73,13 @@
                    response.ST));
             }
 
-            if (response.QN != QN)
-            {
-                throw new IOException(String.Format(CultureInfo.InvariantCulture,
-                   "Mismatched QN in response. Expected {0}, received {1}.",
-                   QN,
-                   response.QN));
-            }
+            //if (response.QN != QN)
+            //{
+            //    throw new IOException(String.Format(CultureInfo.InvariantCulture,
+            //       "Mismatched QN in response. Expected {0}, received {1}.",
+            //       QN,
+            //       response.QN));
+            //}
 
         }
 
