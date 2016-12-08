@@ -23,6 +23,7 @@
         public HDataReport(DateTime qn, string st, string passwd, string mn, HourData hourData)
             :base(qn, st, HJ212.HourData, passwd, mn)
         {
+            ResponseST = HJ212.SysInteraction;
             ResponseCN = HJ212.DataAck;
             _hourData = hourData;
         }

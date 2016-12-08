@@ -22,7 +22,7 @@ namespace HJ212FieldTest
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            var client = new TcpClient("192.168.56.1", 5003);
+            var client = new TcpClient("192.168.31.238", 5003);
             _hj212Field = HJ212Field.CreateTCPField("21", "123456", "12345678901234", client);
         }
 
@@ -69,6 +69,11 @@ namespace HJ212FieldTest
             {
                 MessageBox.Show(ex.ToString());
             }
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _hj212Field.Close();
         }
     }
 }
